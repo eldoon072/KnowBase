@@ -1,5 +1,5 @@
-import { Image as ImageIcon, Save, SquarePen, Star, X } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Check, ChevronDown, Image as ImageIcon, Save, SquarePen, Star, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useKnowledge } from "../features/knowledge/KnowledgeContext";
 import type { KnowledgeItem } from "../types/knowledge";
@@ -13,6 +13,84 @@ const buildSuggestions = (items: KnowledgeItem[]) => {
   const folders = toUniqueSorted(items.map((item) => item.folder ?? "Inbox"));
 
   return { tags, domains, categories, folders };
+};
+
+const useOutsideClose = <T extends HTMLElement>(ref: RefObject<T | null>, onClose: () => void, active: boolean) => {
+  useEffect(() => {
+    if (!active) {
+      return;
+    }
+
+    const handlePointerDown = (event: MouseEvent) => {
+      if (!ref.current) {
+        return;
+      }
+      if (!ref.current.contains(event.target as Node)) {
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, [active, onClose, ref]);
+};
+
+interface DarkDropdownProps {
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+}
+
+const DarkDropdown = ({ label, value, options, onChange }: DarkDropdownProps) => {
+  const [open, setOpen] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useOutsideClose(wrapperRef, () => setOpen(false), open);
+
+  const normalizedOptions = useMemo(() => {
+    const merged = [...options];
+    if (value && !merged.includes(value)) {
+      merged.unshift(value);
+    }
+    return toUniqueSorted(merged);
+  }, [options, value]);
+
+  return (
+    <div ref={wrapperRef} className="relative space-y-2 text-xs text-zinc-500">
+      <span>{label}</span>
+
+      <button
+        type="button"
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex w-full items-center justify-between rounded-xl border border-zinc-700 bg-[#1e1e1f] px-3 py-2.5 text-left text-base text-zinc-100 transition hover:border-zinc-600"
+      >
+        <span className="truncate">{value}</span>
+        <ChevronDown size={16} className={`text-zinc-400 transition ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open ? (
+        <div className="absolute z-30 mt-2 w-full overflow-hidden rounded-xl border border-zinc-700 bg-zinc-900 shadow-[0_10px_24px_rgba(0,0,0,0.45)]">
+          <ul className="max-h-56 overflow-y-auto py-2">
+            {normalizedOptions.map((option) => (
+              <li key={`${label}-${option}`}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange(option);
+                    setOpen(false);
+                  }}
+                  className="flex w-full items-center justify-between px-5 py-3 text-left text-base text-zinc-100 transition hover:bg-zinc-800/70"
+                >
+                  <span>{option}</span>
+                  {option === value ? <Check size={18} className="text-yellow-500" /> : null}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+    </div>
+  );
 };
 
 export const ArticlePage = () => {
@@ -121,16 +199,14 @@ export const ArticlePage = () => {
           <button
             type="button"
             onClick={toggleFavorite}
-            className={`rounded-md border px-2 py-1 text-xs transition ${
+            className={`rounded-md border p-2 transition ${
               draft.isFavorite
                 ? "border-yellow-700 bg-yellow-700/20 text-yellow-500"
                 : "border-zinc-700 bg-zinc-900 text-zinc-400 hover:border-zinc-600 hover:text-zinc-200"
             }`}
+            aria-label="收藏"
           >
-            <span className="inline-flex items-center gap-1">
-              <Star size={12} />
-              收藏
-            </span>
+            <Star size={18} />
           </button>
         </div>
 
@@ -138,7 +214,7 @@ export const ArticlePage = () => {
           value={draft.summary}
           onChange={(event) => setDraft({ ...draft, summary: event.target.value })}
           rows={2}
-          className="mt-3 w-full resize-none rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-zinc-300 outline-none"
+          className="mt-3 w-full resize-none rounded-lg border border-zinc-800 bg-[#1e1e1f] px-3 py-2 text-sm text-zinc-300 outline-none"
           placeholder="摘要"
         />
       </div>
@@ -194,51 +270,26 @@ export const ArticlePage = () => {
           </div>
 
           <div className="grid gap-3 md:grid-cols-3">
-            <label className="space-y-1 text-xs text-zinc-500">
-              <span>领域</span>
-              <input
-                value={draft.domain ?? ""}
-                onChange={(event) => setDraft({ ...draft, domain: event.target.value })}
-                list="domain-options"
-                className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-xs text-zinc-200 outline-none"
-              />
-            </label>
-            <label className="space-y-1 text-xs text-zinc-500">
-              <span>类别</span>
-              <input
-                value={draft.category ?? ""}
-                onChange={(event) => setDraft({ ...draft, category: event.target.value })}
-                list="category-options"
-                className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-xs text-zinc-200 outline-none"
-              />
-            </label>
-            <label className="space-y-1 text-xs text-zinc-500">
-              <span>文件夹</span>
-              <input
-                value={draft.folder ?? ""}
-                onChange={(event) => setDraft({ ...draft, folder: event.target.value })}
-                list="folder-options"
-                className="w-full rounded-md border border-zinc-700 bg-zinc-900 px-2 py-1.5 text-xs text-zinc-200 outline-none"
-              />
-            </label>
+            <DarkDropdown
+              label="领域"
+              value={draft.domain ?? "通用"}
+              options={suggestions.domains}
+              onChange={(domain) => setDraft({ ...draft, domain })}
+            />
+            <DarkDropdown
+              label="类别"
+              value={draft.category ?? "笔记"}
+              options={suggestions.categories}
+              onChange={(category) => setDraft({ ...draft, category })}
+            />
+            <DarkDropdown
+              label="文件夹"
+              value={draft.folder ?? "Inbox"}
+              options={suggestions.folders}
+              onChange={(folder) => setDraft({ ...draft, folder })}
+            />
           </div>
         </div>
-
-        <datalist id="domain-options">
-          {suggestions.domains.map((domain) => (
-            <option key={domain} value={domain} />
-          ))}
-        </datalist>
-        <datalist id="category-options">
-          {suggestions.categories.map((category) => (
-            <option key={category} value={category} />
-          ))}
-        </datalist>
-        <datalist id="folder-options">
-          {suggestions.folders.map((folder) => (
-            <option key={folder} value={folder} />
-          ))}
-        </datalist>
       </div>
 
       <div className="rounded-xl border border-zinc-800 bg-[#1a1a1a] p-4">
@@ -250,20 +301,19 @@ export const ArticlePage = () => {
           value={draft.content ?? ""}
           onChange={(event) => setDraft({ ...draft, content: event.target.value })}
           rows={14}
-          className="mt-3 w-full rounded-lg border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm leading-relaxed text-zinc-300 outline-none"
+          className="mt-3 w-full rounded-lg border border-zinc-800 bg-[#1e1e1f] px-3 py-2 text-sm leading-relaxed text-zinc-300 outline-none"
           placeholder="开始编辑正文内容..."
         />
-      </div>
-
-      <div className="flex justify-end">
-        <button
-          type="button"
-          onClick={handleSave}
-          className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm text-zinc-200 transition hover:border-zinc-600 hover:bg-zinc-800"
-        >
-          <Save size={15} />
-          保存
-        </button>
+        <div className="mt-4 flex justify-end">
+          <button
+            type="button"
+            onClick={handleSave}
+            className="inline-flex items-center gap-2 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-sm text-zinc-200 transition hover:border-zinc-600 hover:bg-zinc-800"
+          >
+            <Save size={15} />
+            保存
+          </button>
+        </div>
       </div>
     </section>
   );

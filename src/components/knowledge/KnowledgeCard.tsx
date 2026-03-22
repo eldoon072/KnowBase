@@ -4,6 +4,7 @@ import type { KnowledgeItem } from "../../types/knowledge";
 
 interface KnowledgeCardProps {
   item: KnowledgeItem;
+  layout?: "carousel" | "masonry";
 }
 
 const typeMeta: Record<
@@ -39,26 +40,44 @@ const renderSubMeta = (item: KnowledgeItem): string | undefined => {
   return undefined;
 };
 
-export const KnowledgeCard = ({ item }: KnowledgeCardProps) => {
+export const KnowledgeCard = ({ item, layout = "carousel" }: KnowledgeCardProps) => {
   const Icon = typeMeta[item.type].icon;
   const subMeta = renderSubMeta(item);
+  const isMasonry = layout === "masonry";
 
   return (
-    <article className="group flex flex-none w-72 flex-col overflow-hidden rounded-xl border border-zinc-800 bg-[#1e1e1e] transition hover:border-zinc-700 hover:bg-[#232323]">
+    <article
+      className={`group flex flex-col overflow-hidden rounded-xl border border-zinc-800 bg-[#1e1e1e] transition hover:border-zinc-700 hover:bg-[#232323] ${
+        isMasonry ? "w-full" : "flex-none w-72"
+      }`}
+    >
       {item.type === "image" && item.thumbnailUrl ? (
-        <img src={item.thumbnailUrl} alt={item.altText ?? item.title} className="h-36 w-full object-cover" />
+        <img
+          src={item.thumbnailUrl}
+          alt={item.altText ?? item.title}
+          className={isMasonry ? "max-h-80 w-full object-cover" : "h-36 w-full object-cover"}
+        />
       ) : (
-        <div className="flex h-28 items-center justify-between border-b border-zinc-800 bg-gradient-to-br from-zinc-900 to-[#222222] px-4">
+        <div
+          className={`flex items-center justify-between border-b border-zinc-800 bg-gradient-to-br from-zinc-900 to-[#222222] px-4 ${
+            isMasonry ? "h-20" : "h-28"
+          }`}
+        >
           <span className="text-[10px] uppercase tracking-[0.2em] text-zinc-400">{typeMeta[item.type].label}</span>
           <Icon size={16} className="text-zinc-500" />
         </div>
       )}
 
       <div className="flex flex-1 flex-col p-4">
-        <Link to={`/article/${item.id}`} className="line-clamp-2 text-sm font-medium text-zinc-100 hover:text-zinc-50">
+        <Link
+          to={`/article/${item.id}`}
+          className={`${isMasonry ? "" : "line-clamp-2"} text-sm font-medium text-zinc-100 hover:text-zinc-50`}
+        >
           {item.title}
         </Link>
-        <p className="mt-2 line-clamp-3 text-xs leading-relaxed text-zinc-400">{item.summary}</p>
+        <p className={`${isMasonry ? "" : "line-clamp-3"} mt-2 text-xs leading-relaxed text-zinc-400`}>
+          {item.summary}
+        </p>
 
         {subMeta ? <p className="mt-3 text-[11px] text-zinc-500">{subMeta}</p> : null}
 

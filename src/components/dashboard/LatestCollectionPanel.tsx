@@ -51,7 +51,7 @@ export const LatestCollectionPanel = ({ items }: LatestCollectionPanelProps) => 
   return (
     <section className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-zinc-800 bg-[#171717] p-4">
       <header>
-        <h3 className="text-lg tracking-[0.34em] text-yellow-600">RELATIVE|最新</h3>
+        <h3 className="text-lg tracking-[0.34em] text-yellow-600">RECENT|最近</h3>
         <div className="mt-3 flex gap-2">
           {latestTabs.map((tab) => (
             <button

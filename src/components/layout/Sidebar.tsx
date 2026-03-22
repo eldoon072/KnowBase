@@ -70,7 +70,7 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
   return (
     <aside
       className={`relative h-full border-r border-zinc-800 bg-[#171717] transition-[width] duration-300 ${
-        collapsed ? "w-[84px]" : "w-[248px]"
+        collapsed ? "w-[84px]" : "w-[186px]"
       }`}
     >
       <div className="flex h-full flex-col">
@@ -82,10 +82,10 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
             type="button"
             onClick={handleCreatePage}
             className={`${topButtonClass} ${collapsed ? "w-full" : "w-full gap-2"} text-xs`}
-            aria-label="创建新页面"
+            aria-label="新页面"
           >
             <PlusSquare size={16} />
-            {!collapsed ? <span>创建新页面</span> : null}
+            {!collapsed ? <span>新页面</span> : null}
           </button>
         </div>
 
@@ -104,7 +104,7 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
                     }`
                   }
                 >
-                  首页总览
+                  首页
                 </NavLink>
                 <NavLink
                   to="/all"
@@ -116,7 +116,7 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
                     }`
                   }
                 >
-                  全部卡片
+                  存档
                 </NavLink>
               </div>
             </section>
@@ -131,7 +131,7 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
                   <li key={`recent-${item.id}`}>
                     <Link
                       to={`/article/${item.id}`}
-                      className="line-clamp-1 rounded-md px-2 py-1 text-xs text-zinc-400 transition hover:bg-zinc-900 hover:text-zinc-200"
+                      className="line-clamp-1 rounded-md px-1.5 py-1 text-[11px] leading-4 text-zinc-400 transition hover:bg-zinc-900 hover:text-zinc-200"
                     >
                       {item.title}
                     </Link>
@@ -153,7 +153,7 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
                     <li key={`favorite-${item.id}`}>
                       <Link
                         to={`/article/${item.id}`}
-                        className="line-clamp-1 rounded-md px-2 py-1 text-xs text-zinc-400 transition hover:bg-zinc-900 hover:text-zinc-200"
+                        className="line-clamp-1 rounded-md px-1.5 py-1 text-[11px] leading-4 text-zinc-400 transition hover:bg-zinc-900 hover:text-zinc-200"
                       >
                         {item.title}
                       </Link>

@@ -51,39 +51,36 @@ export const DashboardPage = () => {
   const { items } = useKnowledge();
   const [query, setQuery] = useState("");
 
-  const filteredItems = useMemo(() => {
+  const recentFilteredItems = useMemo(() => {
     return items.filter((item) => matchesQuery(item, query));
   }, [items, query]);
 
   const topTags = useMemo(() => {
     const counts = new Map<string, number>();
-    filteredItems.forEach((item) => {
+    items.forEach((item) => {
       item.tags.forEach((tag) => counts.set(tag, (counts.get(tag) ?? 0) + 1));
     });
     return [...counts.entries()]
       .sort((left, right) => right[1] - left[1])
       .map(([tag]) => tag);
-  }, [filteredItems]);
+  }, [items]);
 
   const domains = useMemo(() => {
-    return [...new Set(filteredItems.map((item) => item.domain ?? "通用"))];
-  }, [filteredItems]);
+    return [...new Set(items.map((item) => item.domain ?? "通用"))];
+  }, [items]);
 
   const categories = useMemo(() => {
-    return [...new Set(filteredItems.map((item) => item.category ?? "笔记"))];
-  }, [filteredItems]);
+    return [...new Set(items.map((item) => item.category ?? "笔记"))];
+  }, [items]);
 
   const folders = useMemo(() => {
-    return [...new Set(filteredItems.map((item) => item.folder ?? "Inbox"))];
-  }, [filteredItems]);
+    return [...new Set(items.map((item) => item.folder ?? "Inbox"))];
+  }, [items]);
 
-  const tagGroups = useMemo(() => toTopGroups(filteredItems, topTags, "tag"), [filteredItems, topTags]);
-  const domainGroups = useMemo(() => toTopGroups(filteredItems, domains, "domain"), [domains, filteredItems]);
-  const categoryGroups = useMemo(
-    () => toTopGroups(filteredItems, categories, "category"),
-    [categories, filteredItems],
-  );
-  const folderGroups = useMemo(() => toTopGroups(filteredItems, folders, "folder"), [filteredItems, folders]);
+  const tagGroups = useMemo(() => toTopGroups(items, topTags, "tag"), [items, topTags]);
+  const domainGroups = useMemo(() => toTopGroups(items, domains, "domain"), [domains, items]);
+  const categoryGroups = useMemo(() => toTopGroups(items, categories, "category"), [categories, items]);
+  const folderGroups = useMemo(() => toTopGroups(items, folders, "folder"), [folders, items]);
 
   return (
     <div className="space-y-5">
@@ -95,7 +92,7 @@ export const DashboardPage = () => {
           <ToolCardPanel />
         </div>
         <div className="min-w-0 xl:h-[370px]">
-          <LatestCollectionPanel items={filteredItems} />
+          <LatestCollectionPanel items={recentFilteredItems} />
         </div>
       </section>
 
