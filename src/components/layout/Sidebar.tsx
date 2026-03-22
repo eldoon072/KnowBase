@@ -70,7 +70,7 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
   return (
     <aside
       className={`relative h-full border-r border-zinc-800 bg-[#171717] transition-[width] duration-300 ${
-        collapsed ? "w-[84px]" : "w-[278px]"
+        collapsed ? "w-[84px]" : "w-[248px]"
       }`}
     >
       <div className="flex h-full flex-col">

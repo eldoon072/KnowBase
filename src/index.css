@@ -12,6 +12,8 @@
 
 * {
   box-sizing: border-box;
+  scrollbar-width: auto;
+  scrollbar-color: #52525b #18181b;
 }
 
 html,
@@ -27,10 +29,30 @@ body {
 }
 
 .scrollbar-none {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+  scrollbar-width: auto;
 }
 
 .scrollbar-none::-webkit-scrollbar {
-  display: none;
+  display: block;
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #18181b;
+}
+
+*::-webkit-scrollbar-thumb {
+  border: 2px solid #18181b;
+  border-radius: 999px;
+  background: #52525b;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #71717a;
 }
