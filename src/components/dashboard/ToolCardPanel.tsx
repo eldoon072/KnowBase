@@ -6,7 +6,7 @@ export const ToolCardPanel = () => {
     <section className="rounded-xl border border-zinc-800 bg-[#242424] p-4">
       <h3 className="mb-3 text-xs font-medium uppercase tracking-[0.14em] text-zinc-200">工具 | Tool</h3>
 
-      <div className="scrollbar-none flex flex-row gap-6 overflow-x-auto pb-4 w-full">
+      <div className="flex flex-row gap-6 overflow-x-auto pb-4 w-full">
         {toolCardItems.map((tool) => (
           <a
             key={tool.name}

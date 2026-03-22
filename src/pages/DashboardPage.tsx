@@ -89,12 +89,12 @@ export const DashboardPage = () => {
     <div className="space-y-5">
       <HeroHeader query={query} onQueryChange={setQuery} />
 
-      <section className="grid gap-4 2xl:grid-cols-[minmax(0,1.45fr)_minmax(360px,1fr)]">
+      <section className="grid gap-4 xl:grid-cols-[minmax(0,1.45fr)_minmax(340px,1fr)] xl:items-start">
         <div className="min-w-0 space-y-4">
           <NavigationCardPanel />
           <ToolCardPanel />
         </div>
-        <div className="min-w-0">
+        <div className="min-w-0 xl:h-[370px]">
           <LatestCollectionPanel items={filteredItems} />
         </div>
       </section>

@@ -49,7 +49,7 @@ export const LatestCollectionPanel = ({ items }: LatestCollectionPanelProps) => 
   }, [activeTab, items]);
 
   return (
-    <section className="w-full overflow-hidden rounded-xl border border-zinc-800 bg-[#171717] p-4">
+    <section className="flex h-full w-full flex-col overflow-hidden rounded-xl border border-zinc-800 bg-[#171717] p-4">
       <header>
         <h3 className="text-lg tracking-[0.34em] text-yellow-600">RELATIVE|最新</h3>
         <div className="mt-3 flex gap-2">
@@ -70,7 +70,7 @@ export const LatestCollectionPanel = ({ items }: LatestCollectionPanelProps) => 
         </div>
       </header>
 
-      <ul className="mt-3">
+      <ul className="mt-3 min-h-0 flex-1 overflow-y-auto pr-1">
         {latestItems.map((item) => (
           <li key={item.id} className="border-b border-zinc-800/70 last:border-b-0">
             <Link
