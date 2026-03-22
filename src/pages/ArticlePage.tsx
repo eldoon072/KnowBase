@@ -220,9 +220,7 @@ export const ArticlePage = () => {
       </div>
 
       <div className="rounded-xl border border-zinc-800 bg-[#1a1a1a] p-4">
-        <h2 className="text-xs uppercase tracking-[0.16em] text-yellow-600">详情栏（可标记）</h2>
-
-        <div className="mt-3 space-y-3">
+        <div className="space-y-3">
           <div>
             <p className="text-xs text-zinc-500">标签</p>
             <div className="mt-2 flex flex-wrap gap-1.5">
@@ -293,9 +291,8 @@ export const ArticlePage = () => {
       </div>
 
       <div className="rounded-xl border border-zinc-800 bg-[#1a1a1a] p-4">
-        <h2 className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] text-yellow-600">
-          <SquarePen size={13} />
-          编辑页面
+        <h2 className="inline-flex items-center text-yellow-600" aria-label="编辑">
+          <SquarePen size={24} />
         </h2>
         <textarea
           value={draft.content ?? ""}

@@ -90,9 +90,9 @@ export const AllItemsPage = () => {
           {activeFilter ? "当前筛选下暂无结果，可切换其他分类。" : "暂无数据，可在设置页恢复示例数据。"}
         </div>
       ) : (
-        <div className="columns-1 gap-4 [column-gap:1rem] md:columns-2 xl:columns-3 2xl:columns-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
           {filteredItems.map((item) => (
-            <div key={item.id} className="mb-4 inline-block w-full break-inside-avoid space-y-2">
+            <div key={item.id} className="space-y-2">
               <KnowledgeCard item={item} layout="masonry" />
               <div className="flex items-center justify-between px-1 text-[11px] text-zinc-500">
                 <Link to={`/article/${item.id}`} className="hover:text-zinc-300">
