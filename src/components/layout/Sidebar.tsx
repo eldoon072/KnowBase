@@ -131,7 +131,7 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
                   <li key={`recent-${item.id}`}>
                     <Link
                       to={`/article/${item.id}`}
-                      className="line-clamp-1 rounded-md px-1.5 py-1 text-[11px] leading-4 text-zinc-400 transition hover:bg-zinc-900 hover:text-zinc-200"
+                      className="line-clamp-1 rounded-md px-1.5 py-1 text-[11px] leading-4 text-zinc-400 no-underline transition hover:bg-zinc-900 hover:text-zinc-200"
                     >
                       {item.title}
                     </Link>
@@ -153,7 +153,7 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
                     <li key={`favorite-${item.id}`}>
                       <Link
                         to={`/article/${item.id}`}
-                        className="line-clamp-1 rounded-md px-1.5 py-1 text-[11px] leading-4 text-zinc-400 transition hover:bg-zinc-900 hover:text-zinc-200"
+                        className="line-clamp-1 rounded-md px-1.5 py-1 text-[11px] leading-4 text-zinc-400 no-underline transition hover:bg-zinc-900 hover:text-zinc-200"
                       >
                         {item.title}
                       </Link>
