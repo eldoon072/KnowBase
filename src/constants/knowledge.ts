@@ -1,6 +1,6 @@
 import type { KnowledgeGroup, KnowledgeType } from "../types/knowledge";
 
-export const KNOWLEDGE_STORAGE_KEY = "knowbase.items.v1";
+export const KNOWLEDGE_STORAGE_KEY = "knowbase.items.v2";
 export const DEFAULT_DOMAIN = "通用";
 export const DEFAULT_FOLDER = "Inbox";
 

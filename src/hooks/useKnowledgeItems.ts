@@ -38,13 +38,24 @@ const groupByType = (items: KnowledgeItem[]): KnowledgeGroup => {
   return grouped;
 };
 
+const isLegacySeedSnapshot = (items: KnowledgeItem[]): boolean => {
+  const hasNewSeedId = items.some((item) => item.id.startsWith("kb-"));
+  const hasLegacySeedId = items.some((item) => item.id.startsWith("k-"));
+  return hasLegacySeedId && !hasNewSeedId;
+};
+
 const initialItems = (): KnowledgeItem[] => {
-  const stored = loadKnowledgeItems();
+  const normalizedSeed = seedKnowledgeItems.map(normalizeItem);
+  const stored = loadKnowledgeItems().map(normalizeItem);
   if (stored.length > 0) {
-    return sortByNewest(stored.map(normalizeItem));
+    // Migrate legacy sample dataset (k-*) to the latest rebuilt seed (kb-*).
+    if (isLegacySeedSnapshot(stored)) {
+      saveKnowledgeItems(normalizedSeed);
+      return sortByNewest(normalizedSeed);
+    }
+    return sortByNewest(stored);
   }
 
-  const normalizedSeed = seedKnowledgeItems.map(normalizeItem);
   saveKnowledgeItems(normalizedSeed);
   return sortByNewest(normalizedSeed);
 };

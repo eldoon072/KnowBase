@@ -170,12 +170,13 @@ export const Sidebar = ({ collapsed, onToggle }: SidebarProps) => {
               </h3>
               <div className="flex flex-wrap gap-1.5">
                 {commonTags.map((tag) => (
-                  <span
+                  <Link
                     key={tag}
-                    className="rounded-full border border-zinc-700 bg-zinc-900 px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-zinc-400"
+                    to={`/all?${new URLSearchParams({ filter: "tag", value: tag }).toString()}`}
+                    className="rounded-full border border-zinc-700 bg-zinc-900 px-2 py-0.5 text-[10px] uppercase tracking-[0.08em] text-zinc-400 transition hover:border-zinc-600 hover:text-zinc-200"
                   >
                     {tag}
-                  </span>
+                  </Link>
                 ))}
               </div>
             </section>

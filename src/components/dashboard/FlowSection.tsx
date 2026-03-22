@@ -11,8 +11,9 @@ import {
   Text,
   type LucideIcon,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-import type { KnowledgeItem } from "../../types/knowledge";
+import { useNavigate, Link } from "react-router-dom";
+import { useKnowledge } from "../../features/knowledge/KnowledgeContext";
+import type { KnowledgeItem, TextItem } from "../../types/knowledge";
 
 export interface FlowGroup {
   id: string;
@@ -51,6 +52,8 @@ const pickGroupIcon = (label: string): LucideIcon => {
 };
 
 export const FlowSection = ({ title, description, groups }: FlowSectionProps) => {
+  const navigate = useNavigate();
+  const { addItem } = useKnowledge();
   const [activeGroupId, setActiveGroupId] = useState(groups[0]?.id ?? "");
 
   useEffect(() => {
@@ -75,6 +78,28 @@ export const FlowSection = ({ title, description, groups }: FlowSectionProps) =>
   }
 
   const sectionPrefix = sectionPrefixMap[title] ?? "SECTION";
+
+  const handleCreatePage = () => {
+    const id = crypto.randomUUID();
+    const now = new Date().toISOString();
+    const draft: TextItem = {
+      id,
+      type: "text",
+      title: "未命名页面",
+      summary: "在这里开始记录你的下一条知识。",
+      content: "",
+      tags: ["草稿"],
+      domain: "通用",
+      category: "笔记",
+      folder: "Inbox",
+      createdAt: now,
+      updatedAt: now,
+      lastViewedAt: now,
+    };
+
+    addItem(draft);
+    navigate(`/article/${id}`);
+  };
 
   return (
     <section className="space-y-3 rounded-xl border border-zinc-900 bg-[#131313] px-4 py-4">
@@ -117,7 +142,7 @@ export const FlowSection = ({ title, description, groups }: FlowSectionProps) =>
             <Link
               key={item.id}
               to={`/article/${item.id}`}
-              className="group flex-none w-[188px] overflow-hidden rounded-xl border border-zinc-800 bg-[#1a1a1a] transition hover:border-zinc-700"
+              className="group flex h-[164px] w-[188px] flex-none flex-col overflow-hidden rounded-xl border border-zinc-800 bg-[#1a1a1a] transition hover:border-zinc-700"
             >
               {item.thumbnailUrl ? (
                 <img src={item.thumbnailUrl} alt={item.title} className="h-20 w-full object-cover" />
@@ -130,9 +155,9 @@ export const FlowSection = ({ title, description, groups }: FlowSectionProps) =>
                 </div>
               )}
 
-              <div className="p-2.5">
+              <div className="flex flex-1 flex-col p-2.5">
                 <p className="line-clamp-3 text-xs leading-[1.45] text-zinc-100">{item.title}</p>
-                <p className="mt-1.5 inline-flex items-center gap-1 text-[10px] text-zinc-500">
+                <p className="mt-auto inline-flex items-center gap-1 pt-2 text-[10px] text-zinc-500">
                   {(() => {
                     const Icon = typeMeta[item.type].icon;
                     return <Icon size={11} />;
@@ -145,7 +170,8 @@ export const FlowSection = ({ title, description, groups }: FlowSectionProps) =>
 
           <button
             type="button"
-            className="flex h-[140px] w-[188px] flex-none items-center justify-center rounded-xl border border-dashed border-zinc-800 bg-[#171717] text-xs text-zinc-500 transition hover:border-zinc-700 hover:text-zinc-300"
+            onClick={handleCreatePage}
+            className="flex h-[164px] w-[188px] flex-none items-center justify-center rounded-xl border border-dashed border-zinc-800 bg-[#171717] text-xs text-zinc-500 transition hover:border-zinc-700 hover:text-zinc-300"
           >
             <span className="inline-flex items-center gap-1.5">
               <Plus size={12} />

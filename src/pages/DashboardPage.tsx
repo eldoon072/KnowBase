@@ -23,7 +23,7 @@ const matchesQuery = (item: KnowledgeItem, query: string): boolean => {
 };
 
 const toTopGroups = (items: KnowledgeItem[], values: string[], idPrefix: string): FlowGroup[] => {
-  const groups: FlowGroup[] = [{ id: `${idPrefix}-all`, label: "全部", items: items.slice(0, 12) }];
+  const groups: FlowGroup[] = [];
 
   for (const value of values.slice(0, 6)) {
     groups.push({

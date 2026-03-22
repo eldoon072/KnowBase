@@ -51,10 +51,10 @@ export const KnowledgeCard = ({ item, layout = "carousel" }: KnowledgeCardProps)
         isMasonry ? "w-full" : "flex-none w-72"
       }`}
     >
-      {item.type === "image" && item.thumbnailUrl ? (
+      {item.thumbnailUrl ? (
         <img
           src={item.thumbnailUrl}
-          alt={item.altText ?? item.title}
+          alt={item.title}
           className={isMasonry ? "max-h-80 w-full object-cover" : "h-36 w-full object-cover"}
         />
       ) : (
